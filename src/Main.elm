@@ -5,6 +5,7 @@ import Browser.Navigation as Nav
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Url
+import Url.Parser as P exposing (Parser)
 
 
 
@@ -67,17 +68,76 @@ update msg model =
             )
 
 
+type Route
+    = Home
+    | Card
+    | Payment
+    | Complete
+    | NotFound
+
+
+routeParser : Parser (Route -> a) a
+routeParser =
+    P.oneOf
+        [ P.map Home P.top
+        , P.map Card (P.s "card")
+        , P.map Payment (P.s "payment")
+        , P.map Complete (P.s "complete")
+        ]
+
+
+urlToRoute : Url.Url -> Route
+urlToRoute url =
+    Maybe.withDefault
+        NotFound
+        (P.parse routeParser url)
+
+
 
 --VIEW
 
 
 view : Model -> Browser.Document Msg
 view model =
-    { title = "URL Interceptor"
-    , body =
-        [ a [ href "https://twitter.com" ] [ h2 [] [ text "Twitter" ] ]
-        , a [ href "card" ] [ h2 [] [ text "カードを作る" ] ]
-        , a [ href "payment" ] [ h2 [] [ text "ドリンクを選ぶ" ] ]
-        , a [ href "complete" ] [ h2 [] [ text "決済" ] ]
-        ]
-    }
+    case urlToRoute model.url of
+        Home ->
+            { title = "HOME"
+            , body =
+                [ viewAnker "/card" "カードを作る" ]
+            }
+
+        Card ->
+            { title = "CARD"
+            , body =
+                [ h1 [] [ text "カード" ]
+                , viewAnker "/payment" "ドリンクを選ぶ"
+                ]
+            }
+
+        Payment ->
+            { title = "Payment"
+            , body =
+                [ h1 [] [ text "決済画面" ]
+                , viewAnker "/complete" "決済"
+                ]
+            }
+
+        Complete ->
+            { title = "Complete"
+            , body =
+                [ h1 [] [ text "購入完了" ]
+                , viewAnker "/home" "もう一回！"
+                ]
+            }
+
+        NotFound ->
+            { title = "Not Found"
+            , body =
+                [ h1 [] [ text "ページが見つかりませんでした" ]
+                ]
+            }
+
+
+viewAnker : String -> String -> Html msg
+viewAnker path label =
+    a [ href path ] [ h2 [] [ text label ] ]
