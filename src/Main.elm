@@ -126,7 +126,7 @@ view model =
             { title = "Complete"
             , body =
                 [ h1 [] [ text "購入完了" ]
-                , viewAnker "/home" "もう一回！"
+                , viewAnker "/" "もう一回！"
                 ]
             }
 
