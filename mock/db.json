@@ -1,0 +1,74 @@
+{
+  "categories": [
+    {
+      "id": 1,
+      "name": "sample",
+      "image_url": "https://e-gifts-dev.s3-ap-northeast-1.amazonaws.com/eg_gift_card_categories/images/1/sp_select/pickup.jpg"
+    },
+    {
+      "id": 2,
+      "name": "sample",
+      "image_url": "https://e-gifts-dev.s3-ap-northeast-1.amazonaws.com/eg_gift_card_categories/images/1/sp_select/pickup.jpg"
+    }
+  ],
+  "designs": [
+    {
+      "id": 1,
+      "name": "aroma",
+      "image_url": "https://e-gifts-dev.s3-ap-northeast-1.amazonaws.com/eg_gift_card_designs/images/1/sp_select/coffee_aroma.jpg",
+      "categoryId": 1
+    },
+    {
+      "id": 2,
+      "name": "aroma",
+      "image_url": "https://e-gifts-dev.s3-ap-northeast-1.amazonaws.com/eg_gift_card_designs/images/1/sp_select/coffee_aroma.jpg",
+      "categoryId": 1
+    },
+    {
+      "id": 3,
+      "name": "aroma",
+      "image_url": "https://e-gifts-dev.s3-ap-northeast-1.amazonaws.com/eg_gift_card_designs/images/1/sp_select/coffee_aroma.jpg",
+      "categoryId": 2
+    },
+    {
+      "id": 4,
+      "name": "aroma",
+      "image_url": "https://e-gifts-dev.s3-ap-northeast-1.amazonaws.com/eg_gift_card_designs/images/1/sp_select/coffee_aroma.jpg",
+      "categoryId": 2
+    }
+  ],
+  "users": [
+    {
+      "id": 1,
+      "unm": "sean"
+    }
+  ],
+  "todos": [
+    {
+      "id": 1,
+      "name": "list1",
+      "items": [
+        {
+          "title": "asd",
+          "descrp": "asd"
+        }
+      ],
+      "userId": 1
+    },
+    {
+      "id": 2,
+      "name": "list2",
+      "items": [
+        {
+          "title": "Book",
+          "descrp": "Read Outliers"
+        },
+        {
+          "title": "sadasd",
+          "descrp": "Reassasdasdasdssliers"
+        }
+      ],
+      "userId": 1
+    }
+  ]
+}
