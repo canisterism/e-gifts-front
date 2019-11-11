@@ -4,6 +4,8 @@ import Browser
 import Browser.Navigation as Nav
 import Html exposing (..)
 import Html.Attributes exposing (..)
+import Http
+import Json.Decode as D exposing (Decoder)
 import Url
 import Url.Parser as P exposing (Parser)
 
@@ -31,12 +33,36 @@ main =
 type alias Model =
     { key : Nav.Key
     , url : Url.Url
+    , categories : List Category
+    }
+
+
+type alias Category =
+    { id : Int
+    , name : String
+    , imageUrl : String
+    }
+
+
+type alias Design =
+    { id : Int
+    , name : String
+    , imageUrl : String
+    , categoryId : Int
     }
 
 
 init : () -> Url.Url -> Nav.Key -> ( Model, Cmd Msg )
 init flags url key =
-    ( Model key url, Cmd.none )
+    ( Model key
+        url
+        [ { id = 0
+          , name = ""
+          , imageUrl = ""
+          }
+        ]
+    , Cmd.none
+    )
 
 
 
@@ -46,6 +72,7 @@ init flags url key =
 type Msg
     = LinkClicked Browser.UrlRequest
     | UrlChanged Url.Url
+    | GotCategories (Result Http.Error String)
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -63,9 +90,18 @@ update msg model =
         -- pushUrlされたりするとUrlChangedが発行される
         -- modelを書き換えてるだけで実質何もしてない
         UrlChanged url ->
-            ( { model | url = url }
-            , Cmd.none
-            )
+            case urlToRoute url of
+                Card ->
+                    ( { model | url = url }
+                    , getCategories
+                    )
+
+
+
+-- GotCategories Ok categories ->
+--     ( { model | categories = categories }, Cmd.none )
+-- GotCategories Err categories ->
+--     ( Debug.log (Debug.toString page) model, Cmd.none )
 
 
 type Route
@@ -141,3 +177,25 @@ view model =
 viewAnker : String -> String -> Html msg
 viewAnker path label =
     a [ href path ] [ h2 [] [ text label ] ]
+
+
+
+-- HTTP
+
+
+getCategories : Cmd Msg
+getCategories =
+    Http.get
+        { url = "http://localhost:3000/categories"
+        , expect = Http.expectJson GotCategories categoryDecoder
+        }
+
+
+decodeCategories =
+    decodeString
+
+
+categoryDecoder : Decoder Category
+categoryDecoder =
+    D.map3 Category
+        (D.at [ "id" ] D.string)
