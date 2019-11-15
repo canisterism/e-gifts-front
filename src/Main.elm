@@ -72,7 +72,7 @@ init flags url key =
 type Msg
     = LinkClicked Browser.UrlRequest
     | UrlChanged Url.Url
-    | GotCategories (Result Http.Error String)
+    | GotCategories (Result Http.Error (List Category))
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -91,17 +91,34 @@ update msg model =
         -- modelを書き換えてるだけで実質何もしてない
         UrlChanged url ->
             case urlToRoute url of
+                Home ->
+                    ( { model | url = url }
+                    , Cmd.none
+                    )
                 Card ->
                     ( { model | url = url }
                     , getCategories
                     )
+                Payment ->
+                    ( { model | url = url }
+                    , Cmd.none
+                    )
+                Complete ->
+                    ( { model | url = url }
+                    , Cmd.none
+                    )
+                NotFound ->
+                    ( { model | url = url }
+                    , Cmd.none
+                    )
 
+        GotCategories result ->
+            case result of
+                Ok categories ->
+                    ({ model | categories = Debug.log "categories:" categories }, Cmd.none)
 
-
--- GotCategories Ok categories ->
---     ( { model | categories = categories }, Cmd.none )
--- GotCategories Err categories ->
---     ( Debug.log (Debug.toString page) model, Cmd.none )
+                Err _ ->
+                    ( model, Cmd.none )
 
 
 type Route
@@ -187,15 +204,18 @@ getCategories : Cmd Msg
 getCategories =
     Http.get
         { url = "http://localhost:3000/categories"
-        , expect = Http.expectJson GotCategories categoryDecoder
+        , expect = Http.expectJson GotCategories categoriesDecoder
         }
 
 
-decodeCategories =
-    decodeString
+categoriesDecoder : Decoder (List Category)
+categoriesDecoder =
+     D.list categoryDecoder
 
 
 categoryDecoder : Decoder Category
 categoryDecoder =
     D.map3 Category
-        (D.at [ "id" ] D.string)
+        (D.at [ "id" ] D.int)
+        (D.at [ "name" ] D.string)
+        (D.at [ "imageUrl" ] D.string)
