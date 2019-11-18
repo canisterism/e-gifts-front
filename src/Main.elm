@@ -95,18 +95,22 @@ update msg model =
                     ( { model | url = url }
                     , Cmd.none
                     )
+
                 Card ->
                     ( { model | url = url }
                     , getCategories
                     )
+
                 Payment ->
                     ( { model | url = url }
                     , Cmd.none
                     )
+
                 Complete ->
                     ( { model | url = url }
                     , Cmd.none
                     )
+
                 NotFound ->
                     ( { model | url = url }
                     , Cmd.none
@@ -115,7 +119,7 @@ update msg model =
         GotCategories result ->
             case result of
                 Ok categories ->
-                    ({ model | categories = Debug.log "categories:" categories }, Cmd.none)
+                    ( { model | categories = Debug.log "categories:" categories }, Cmd.none )
 
                 Err _ ->
                     ( model, Cmd.none )
@@ -210,7 +214,7 @@ getCategories =
 
 categoriesDecoder : Decoder (List Category)
 categoriesDecoder =
-     D.list categoryDecoder
+    D.list categoryDecoder
 
 
 categoryDecoder : Decoder Category
