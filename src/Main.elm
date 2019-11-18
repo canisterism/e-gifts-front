@@ -167,6 +167,7 @@ view model =
             { title = "CARD"
             , body =
                 [ h1 [] [ text "カード" ]
+                , div [] (List.map showCategory model.categories)
                 , viewAnker "/payment" "ドリンクを選ぶ"
                 ]
             }
@@ -198,6 +199,14 @@ view model =
 viewAnker : String -> String -> Html msg
 viewAnker path label =
     a [ href path ] [ h2 [] [ text label ] ]
+
+
+showCategory : Category -> Html msg
+showCategory category =
+    span []
+        [ h3 [] [ text category.name ]
+        , img [ src category.imageUrl ] []
+        ]
 
 
 
