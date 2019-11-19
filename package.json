@@ -1,0 +1,12 @@
+{
+  "name": "e-gifts-front",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:canisterism/e-gifts-front.git",
+  "author": "canisterism <ohtthstc@gmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "elm-hot": "^1.1.3",
+    "node-elm-compiler": "^5.0.4"
+  }
+}
