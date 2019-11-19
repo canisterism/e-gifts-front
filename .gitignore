@@ -2,3 +2,6 @@
 *.elmi
 *.elmo
 *.dat
+/node_modules/
+/.cache/
+/dist/

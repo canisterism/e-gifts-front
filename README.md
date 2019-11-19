@@ -2,9 +2,9 @@
 
 ## developent
 
-`$ npm install -g elm elm-live`
+install elm from [Official Elm Page](https://guide.elm-lang.org/install/elm.html)
 
-`$ elm-live src/Main.elm -u -hot` 
+`$ npm install -g parcel-bundler`
 
 ### mock API
 
