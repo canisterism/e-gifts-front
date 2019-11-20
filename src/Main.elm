@@ -2,6 +2,10 @@ module Main exposing (..)
 
 import Browser
 import Browser.Navigation as Nav
+import Element as E exposing (Element)
+import Element.Background as Background
+import Element.Border as Border
+import Element.Font as Font
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Http
@@ -166,8 +170,8 @@ view model =
         Card ->
             { title = "CARD"
             , body =
-                [ h1 [] [ text "カード" ]
-                , div [] (List.map showCategory model.categories)
+                [ E.layout []
+                    (cardLayouts model.categories)
                 , viewAnker "/payment" "ドリンクを選ぶ"
                 ]
             }
@@ -201,12 +205,86 @@ viewAnker path label =
     a [ href path ] [ h2 [] [ text label ] ]
 
 
-showCategory : Category -> Html msg
-showCategory category =
-    span []
-        [ h3 [] [ text category.name ]
-        , img [ src category.imageUrl ] []
+
+-- showCategory : Category -> Element msg
+-- showCategory category =
+--     el []
+--         ( h3 [] [ text category.name ]
+--         , img [ src category.imageUrl ] []
+--         )
+
+
+cardLayouts : List Category -> Element msg
+cardLayouts categories =
+    E.column [ E.width <| E.px 560, E.height <| E.fill, E.centerX, E.centerY ]
+        [ cardHeader
+        , cardCarousel categories
+        , cardPreview
         ]
+
+
+cardHeader : Element msg
+cardHeader =
+    E.row
+        [ Background.color <| E.rgb255 240 240 240
+        , E.width E.fill
+        , E.height <| E.fillPortion 1
+        , E.spacing 30
+        , E.paddingXY 16 8
+        ]
+        [ E.el
+            []
+            (E.link
+                [ E.width <| E.px 16
+                , E.height <| E.px 16
+                , E.rotate <| degrees 45
+                , Border.color <| E.rgb255 83 83 83
+                , Border.widthEach <|
+                    { bottom = 4
+                    , left = 4
+                    , right = 0
+                    , top = 0
+                    }
+                , Border.solid
+                ]
+                { url = "/", label = E.text "" }
+            )
+        , E.el
+            [ E.centerX
+            , Font.color <| E.rgb255 123 117 112
+            , Font.bold
+            , Font.size 16
+            ]
+            (E.text "カードを作成する")
+        , E.el
+            [ Font.color <| E.rgb255 87 185 0
+            , Font.bold
+            , Font.size 16
+            ]
+            (E.link [] { url = "/payment", label = E.text "次へ" })
+        ]
+
+
+cardCarousel : List Category -> Element msg
+cardCarousel categories =
+    E.row [ E.width E.fill, E.height <| E.fillPortion 4, E.centerY, E.centerX, E.spacing 30 ]
+        [ E.text "text" ]
+
+
+cardPreview : Element msg
+cardPreview =
+    E.row [ E.width E.fill, E.height <| E.fillPortion 30, E.centerY, E.centerX, E.spacing 30 ]
+        [ E.el [ E.padding 30 ]
+            (E.text "カード")
+        ]
+
+
+edges =
+    { top = 0
+    , right = 0
+    , bottom = 0
+    , left = 0
+    }
 
 
 
@@ -232,3 +310,7 @@ categoryDecoder =
         (D.at [ "id" ] D.int)
         (D.at [ "name" ] D.string)
         (D.at [ "imageUrl" ] D.string)
+
+
+
+-- 頑張って積み上げたレイアウトをelm-uiで実装する
