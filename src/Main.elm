@@ -267,13 +267,73 @@ cardHeader =
 
 cardCarousel : List Category -> Element msg
 cardCarousel categories =
-    E.row [ E.width E.fill, E.height <| E.fillPortion 4, E.centerY, E.centerX, E.spacing 30 ]
-        [ E.text "text" ]
+    -- 元締め
+    E.column
+        [ E.width E.fill
+        , E.height <| E.fillPortion 6
+        , Border.color <| E.rgb255 120 20 20
+        , Border.width 4
+        ]
+        -- カテゴリ行
+        [ E.row [ E.width E.fill, E.height <| E.fillPortion 2 ]
+            -- ←矢印
+            [ E.column
+                [ E.width <| E.px 20, E.height <| E.fill ]
+                [ E.text "←" ]
+
+            -- カテゴリパネル
+            , E.row
+                [ E.width E.fill
+                , E.height <| E.fill
+                ]
+              <|
+                List.repeat 5 <|
+                    E.el
+                        [ E.width <| E.fill
+                        , E.height <| E.fill
+                        , Border.color <| E.rgb255 120 20 20
+                        , Border.width 1
+                        ]
+                    <|
+                        E.text
+                            "Category"
+
+            -- →矢印
+            , E.column
+                [ E.width <| E.px 20, E.height <| E.fill ]
+                [ E.text "→" ]
+            ]
+
+        -- デザインパネル
+        , E.row
+            [ E.width E.fill
+            , E.height <| E.fillPortion 3
+            ]
+          <|
+            List.repeat 5 <|
+                E.el
+                    [ E.width <| E.fill
+                    , E.height <| E.fill
+                    , Border.color <| E.rgb255 120 20 20
+                    , Border.width 1
+                    ]
+                <|
+                    E.text
+                        "Design"
+        ]
 
 
 cardPreview : Element msg
 cardPreview =
-    E.row [ E.width E.fill, E.height <| E.fillPortion 30, E.centerY, E.centerX, E.spacing 30 ]
+    E.row
+        [ E.width E.fill
+        , E.height <| E.fillPortion 30
+        , E.centerY
+        , E.centerX
+        , E.spacing 30
+        , Border.color <| E.rgb255 120 20 20
+        , Border.width 1
+        ]
         [ E.el [ E.padding 30 ]
             (E.text "カード")
         ]
