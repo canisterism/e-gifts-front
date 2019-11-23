@@ -280,12 +280,10 @@ cardCarousel categories =
               <|
                 List.repeat 5 <|
                     E.el
-                        [ E.width <| E.fill
-                        , E.height <| E.fill
-                        ]
+                        []
                     <|
-                        E.text
-                            "Category"
+                        E.image [ E.width <| E.px 112, E.height <| E.px 112 ] <|
+                            { description = "categoryImage", src = "https://e-gifts-dev.s3-ap-northeast-1.amazonaws.com/eg_gift_card_categories/images/1/sp_select/pickup.jpg" }
 
             -- →矢印
             , E.column
@@ -295,19 +293,20 @@ cardCarousel categories =
 
         -- デザインパネル
         , E.row
-            [ E.width E.fill
-            , E.height <| E.fillPortion 3
+            [ E.height <| E.fillPortion 3
             , E.explain Debug.todo
             ]
           <|
             List.repeat 5 <|
                 E.el
-                    [ E.width <| E.fill
-                    , E.height <| E.fill
-                    ]
+                    []
                 <|
-                    E.text
-                        "Design"
+                    E.image
+                        [ E.width <| E.px 160
+                        , E.height <| E.px 136
+                        ]
+                    <|
+                        { description = "designImage", src = "https://e-gifts-dev.s3-ap-northeast-1.amazonaws.com/eg_gift_card_designs/images/1/sp_select/coffee_aroma.jpg" }
         ]
 
 
