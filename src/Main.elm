@@ -216,7 +216,7 @@ viewAnker path label =
 
 cardLayouts : List Category -> Element msg
 cardLayouts categories =
-    E.column [ E.width <| E.px 560, E.height <| E.fill, E.centerX, E.centerY ]
+    E.column [ E.width <| E.px 560, E.height <| E.fill, E.centerX, E.centerY, E.explain Debug.todo ]
         [ cardHeader
         , cardCarousel categories
         , cardPreview
@@ -238,14 +238,6 @@ cardHeader =
                 [ E.width <| E.px 16
                 , E.height <| E.px 16
                 , E.rotate <| degrees 45
-                , Border.color <| E.rgb255 83 83 83
-                , Border.widthEach <|
-                    { bottom = 4
-                    , left = 4
-                    , right = 0
-                    , top = 0
-                    }
-                , Border.solid
                 ]
                 { url = "/", label = E.text "" }
             )
@@ -271,8 +263,6 @@ cardCarousel categories =
     E.column
         [ E.width E.fill
         , E.height <| E.fillPortion 6
-        , Border.color <| E.rgb255 120 20 20
-        , Border.width 4
         ]
         -- カテゴリ行
         [ E.row [ E.width E.fill, E.height <| E.fillPortion 2 ]
@@ -285,14 +275,13 @@ cardCarousel categories =
             , E.row
                 [ E.width E.fill
                 , E.height <| E.fill
+                , E.explain Debug.todo
                 ]
               <|
                 List.repeat 5 <|
                     E.el
                         [ E.width <| E.fill
                         , E.height <| E.fill
-                        , Border.color <| E.rgb255 120 20 20
-                        , Border.width 1
                         ]
                     <|
                         E.text
@@ -308,14 +297,13 @@ cardCarousel categories =
         , E.row
             [ E.width E.fill
             , E.height <| E.fillPortion 3
+            , E.explain Debug.todo
             ]
           <|
             List.repeat 5 <|
                 E.el
                     [ E.width <| E.fill
                     , E.height <| E.fill
-                    , Border.color <| E.rgb255 120 20 20
-                    , Border.width 1
                     ]
                 <|
                     E.text
@@ -331,8 +319,6 @@ cardPreview =
         , E.centerY
         , E.centerX
         , E.spacing 30
-        , Border.color <| E.rgb255 120 20 20
-        , Border.width 1
         ]
         [ E.el [ E.padding 30 ]
             (E.text "カード")
@@ -350,6 +336,11 @@ edges =
 class : String -> E.Attribute msg
 class =
     Html.Attributes.class >> E.htmlAttribute
+
+
+condClass : List ( String, Bool ) -> E.Attribute msg
+condClass =
+    Html.Attributes.classList >> E.htmlAttribute
 
 
 
