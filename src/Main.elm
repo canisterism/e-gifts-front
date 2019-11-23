@@ -347,6 +347,11 @@ edges =
     }
 
 
+class : String -> E.Attribute msg
+class =
+    Html.Attributes.class >> E.htmlAttribute
+
+
 
 -- HTTP
 
