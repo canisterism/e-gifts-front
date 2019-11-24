@@ -243,7 +243,7 @@ cardHeader =
         , E.padding 16
         ]
         [ E.el
-            []
+            [ class "header__back" ]
             (E.link
                 [ E.width <| E.px 16
                 , E.height <| E.px 16
@@ -257,12 +257,14 @@ cardHeader =
             , Font.color <| E.rgb255 123 117 112
             , Font.bold
             , Font.size 16
+            , class "header__label"
             ]
             (E.text "カードを作成する")
         , E.el
             [ Font.color <| E.rgb255 87 185 0
             , Font.bold
             , Font.size 16
+            , class "header__next"
             ]
             (E.link [] { url = "/payment", label = E.text "次へ" })
         ]
@@ -277,43 +279,47 @@ cardCarousel categories =
         , E.paddingXY 16 8
         ]
         -- カテゴリ行
-        [ E.row [ E.width E.fill, E.height <| E.fillPortion 2 ]
+        [ E.row [ E.width E.fill, E.height <| E.fillPortion 2, class "categories__row" ]
             -- ←矢印
             [ E.column
-                [ E.width <| E.px 20, E.height <| E.fill ]
+                [ E.width <| E.px 20, E.height <| E.fill, class "categories__back" ]
                 [ E.text "←" ]
 
             -- カテゴリパネル
             , E.row
                 [ E.width E.fill
                 , E.height <| E.fill
+                , class "categories__panels"
                 ]
               <|
                 List.repeat 5 <|
                     E.el
-                        []
+                        [ class "categories__panel" ]
                     <|
-                        E.image [ E.width <| E.px 112, E.height <| E.px 112 ] <|
+                        E.image [ E.width <| E.px 112, E.height <| E.px 112, class "categories__image", condClass <| [ ( "on", True ) ] ] <|
                             { description = "categoryImage", src = "https://e-gifts-dev.s3-ap-northeast-1.amazonaws.com/eg_gift_card_categories/images/1/sp_select/pickup.jpg" }
 
             -- →矢印
             , E.column
-                [ E.width <| E.px 20, E.height <| E.fill ]
+                [ E.width <| E.px 20, E.height <| E.fill, class "categories__next" ]
                 [ E.text "→" ]
             ]
 
         -- デザインパネル
         , E.row
             [ E.height <| E.fillPortion 3
+            , class "designs"
             ]
           <|
             List.repeat 5 <|
                 E.el
-                    []
+                    [ class "designs__panels" ]
                 <|
                     E.image
                         [ E.width <| E.px 160
                         , E.height <| E.px 136
+                        , class "categories__image"
+                        , condClass <| [ ( "on", True ) ]
                         ]
                     <|
                         { description = "designImage", src = "https://e-gifts-dev.s3-ap-northeast-1.amazonaws.com/eg_gift_card_designs/images/1/sp_select/coffee_aroma.jpg" }
@@ -327,12 +333,12 @@ cardPreview message =
         , E.height <| E.fillPortion 60
         ]
         -- 台紙
-        [ E.column [ E.width E.fill, E.height <| E.fill, E.spacing 20, E.padding 20 ]
+        [ E.column [ E.width E.fill, E.height <| E.fill, E.spacing 20, E.padding 20, class "preview__base" ]
             -- 選択したデザイン
-            [ E.image [ E.width E.fill, E.height <| E.px 280 ] { description = "selectedDesign", src = "https://e-gifts-dev.s3-ap-northeast-1.amazonaws.com/eg_gift_card_designs/images/1/sp_select/coffee_aroma.jpg" }
+            [ E.image [ E.width E.fill, E.height <| E.px 280, class "preview__design" ] { description = "selectedDesign", src = "https://e-gifts-dev.s3-ap-northeast-1.amazonaws.com/eg_gift_card_designs/images/1/sp_select/coffee_aroma.jpg" }
 
             -- メッセージ入力
-            , Input.multiline [ E.padding 20, E.height <| E.px 184 ]
+            , Input.multiline [ E.padding 20, E.height <| E.px 184, class "preview__message" ]
                 { label = Input.labelHidden "message"
                 , onChange = ChangeMessage
                 , placeholder = Just <| Input.placeholder [] <| E.text "メッセージを入れることが出来ます"
@@ -351,6 +357,7 @@ cardSubmit =
         , E.padding 16
         , Background.color <| E.rgb255 94 181 31
         , Font.color <| E.rgb255 255 255 255
+        , class "submit__button"
         ]
         { url = "/payment", label = E.text "商品を選ぶ" }
 
