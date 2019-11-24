@@ -1,0 +1,55 @@
+// see: http://getbem.com/
+
+$bg-white: #fff;
+$bg-gray: #f0f0f0;
+.header {
+  background-color: $bg-gray;
+  &__back,
+  &__next {
+  }
+  &__label {
+  }
+}
+
+.carousel {
+  overflow: hidden;
+}
+.category {
+  &__back,
+  &__next {
+    background-color: $bg-white;
+    cursor: pointer;
+  }
+  &__content {
+  }
+  &__panels {
+  }
+  &__panel {
+    overflow: hidden;
+  }
+  &__image {
+    > img {
+      border-bottom: 2px solid transparent;
+    }
+    &.on {
+      bottom: 112px;
+      > img {
+        border-bottom: 2px solid green;
+      }
+    }
+  }
+}
+.designs {
+}
+.designs__panels {
+}
+.categories__image {
+}
+.preview__base {
+}
+.preview__design {
+}
+.preview__message {
+}
+.submit__button {
+}
