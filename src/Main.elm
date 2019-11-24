@@ -236,20 +236,23 @@ cardLayouts model =
 cardHeader : Element msg
 cardHeader =
     E.row
-        [ Background.color <| E.rgb255 240 240 240
-        , E.width E.fill
+        [ E.width E.fill
         , E.height <| E.fillPortion 1
         , E.spacing 30
         , E.padding 16
+        , class "header"
         ]
         [ E.el
             [ class "header__back" ]
             (E.link
-                [ E.width <| E.px 16
-                , E.height <| E.px 16
-                , E.rotate <| degrees 45
+                [ E.width <| E.px 14
+                , E.height <| E.px 14
+                , E.rotate <| degrees 135
+                , Border.color <| E.rgb255 123 117 112
+                , Border.solid
+                , Border.widthEach { edges | bottom = 4, right = 4 }
                 ]
-                { url = "/", label = E.text "」" }
+                { url = "/", label = E.text "" }
              -- テキストは仮置 borderにする
             )
         , E.el
@@ -272,37 +275,68 @@ cardHeader =
 
 cardCarousel : List Category -> Element msg
 cardCarousel categories =
-    -- 元締め
     E.column
         [ E.width E.fill
         , E.height <| E.fillPortion 6
-        , E.paddingXY 16 8
+        , E.paddingEach { edges | left = 8 }
+        , class "carousel"
         ]
-        -- カテゴリ行
-        [ E.row [ E.width E.fill, E.height <| E.fillPortion 2, class "categories__row" ]
-            -- ←矢印
+        [ E.row [ class "carousel__category", E.width E.fill, E.paddingEach { edges | left = 2, bottom = 4 } ]
             [ E.column
-                [ E.width <| E.px 20, E.height <| E.fill, class "categories__back" ]
-                [ E.text "←" ]
-
-            -- カテゴリパネル
-            , E.row
-                [ E.width E.fill
-                , E.height <| E.fill
-                , class "categories__panels"
+                [ E.width <| E.px 20, E.height <| E.fill, class "category__back" ]
+                [ E.el
+                    [ E.width <| E.px 16
+                    , E.height <| E.px 16
+                    , E.rotate <| degrees 135
+                    , E.centerY
+                    , Border.color <| E.rgb255 123 117 112
+                    , Border.solid
+                    , Border.widthEach { edges | bottom = 4, right = 4 }
+                    ]
+                  <|
+                    E.none
                 ]
-              <|
-                List.repeat 5 <|
-                    E.el
-                        [ class "categories__panel" ]
-                    <|
-                        E.image [ E.width <| E.px 112, E.height <| E.px 112, class "categories__image", condClass <| [ ( "on", True ) ] ] <|
-                            { description = "categoryImage", src = "https://e-gifts-dev.s3-ap-northeast-1.amazonaws.com/eg_gift_card_categories/images/1/sp_select/pickup.jpg" }
-
-            -- →矢印
             , E.column
-                [ E.width <| E.px 20, E.height <| E.fill, class "categories__next" ]
-                [ E.text "→" ]
+                [ E.width E.fill
+                , class "category__content"
+                , Border.color <| E.rgb255 200 200 200
+                , Border.solid
+                , Border.widthEach { edges | bottom = 1 }
+                ]
+                [ -- カテゴリパネル
+                  E.row
+                    [ E.width <| E.px 11
+                    , E.height <| E.px 112
+                    , E.spacing 15
+                    , class "categories__panels"
+                    ]
+                  <|
+                    List.repeat 5 <|
+                        E.el
+                            [ E.width <| E.px 112, E.height <| E.px 112, class "category__panel" ]
+                        <|
+                            E.image
+                                [ E.height <| E.px 224
+                                , class "category__image"
+                                , condClass <| [ ( "on", False ) ]
+                                ]
+                            <|
+                                { description = "categoryImage", src = "https://e-gifts-dev.s3-ap-northeast-1.amazonaws.com/eg_gift_card_categories/images/1/sp_select/pickup.jpg" }
+                ]
+            , E.column
+                [ E.width <| E.px 20, E.height <| E.fill, class "category__next" ]
+                [ E.el
+                    [ E.width <| E.px 16
+                    , E.height <| E.px 16
+                    , E.rotate <| degrees 135
+                    , E.centerY
+                    , Border.color <| E.rgb255 123 117 112
+                    , Border.solid
+                    , Border.widthEach { edges | top = 4, left = 4 }
+                    ]
+                  <|
+                    E.none
+                ]
             ]
 
         -- デザインパネル
@@ -373,6 +407,11 @@ edges =
 class : String -> E.Attribute msg
 class =
     Html.Attributes.class >> E.htmlAttribute
+
+
+id : String -> E.Attribute msg
+id =
+    Html.Attributes.id >> E.htmlAttribute
 
 
 condClass : List ( String, Bool ) -> E.Attribute msg
