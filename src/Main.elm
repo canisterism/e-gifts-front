@@ -292,6 +292,8 @@ cardCarousel categories =
                     , Border.color <| E.rgb255 123 117 112
                     , Border.solid
                     , Border.widthEach { edges | bottom = 4, right = 4 }
+
+                    -- , Events.onClick -- TODO: IMPLEMENT THIS MSG
                     ]
                   <|
                     E.none
@@ -305,10 +307,11 @@ cardCarousel categories =
                 ]
                 [ -- カテゴリパネル
                   E.row
-                    [ E.width <| E.px 11
+                    [ E.width <| E.px 1
                     , E.height <| E.px 112
-                    , E.spacing 15
-                    , class "categories__panels"
+                    , E.spacing 16
+                    , class "category__panels"
+                    , E.paddingEach { edges | left = 4 }
                     ]
                   <|
                     List.repeat 5 <|
@@ -319,6 +322,8 @@ cardCarousel categories =
                                 [ E.height <| E.px 224
                                 , class "category__image"
                                 , condClass <| [ ( "on", False ) ]
+
+                                -- , Events.onClick -- TODO: IMPLEMENT THIS MSG
                                 ]
                             <|
                                 { description = "categoryImage", src = "https://e-gifts-dev.s3-ap-northeast-1.amazonaws.com/eg_gift_card_categories/images/1/sp_select/pickup.jpg" }
@@ -333,6 +338,8 @@ cardCarousel categories =
                     , Border.color <| E.rgb255 123 117 112
                     , Border.solid
                     , Border.widthEach { edges | top = 4, left = 4 }
+
+                    -- , Events.onClick -- TODO: IMPLEMENT THIS MSG
                     ]
                   <|
                     E.none
