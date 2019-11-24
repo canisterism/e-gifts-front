@@ -5,7 +5,9 @@ import Browser.Navigation as Nav
 import Element as E exposing (Element)
 import Element.Background as Background
 import Element.Border as Border
+import Element.Events as Events
 import Element.Font as Font
+import Element.Input as Input
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Http
@@ -38,6 +40,7 @@ type alias Model =
     { key : Nav.Key
     , url : Url.Url
     , categories : List Category
+    , message : String
     }
 
 
@@ -58,13 +61,15 @@ type alias Design =
 
 init : () -> Url.Url -> Nav.Key -> ( Model, Cmd Msg )
 init flags url key =
-    ( Model key
+    ( Model
+        key
         url
         [ { id = 0
           , name = ""
           , imageUrl = ""
           }
         ]
+        "String"
     , Cmd.none
     )
 
@@ -77,6 +82,7 @@ type Msg
     = LinkClicked Browser.UrlRequest
     | UrlChanged Url.Url
     | GotCategories (Result Http.Error (List Category))
+    | ChangeMessage String
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -119,6 +125,9 @@ update msg model =
                     ( { model | url = url }
                     , Cmd.none
                     )
+
+        ChangeMessage message ->
+            ( { model | message = message }, Cmd.none )
 
         GotCategories result ->
             case result of
@@ -171,7 +180,7 @@ view model =
             { title = "CARD"
             , body =
                 [ E.layout []
-                    (cardLayouts model.categories)
+                    (cardLayouts model)
                 , viewAnker "/payment" "ドリンクを選ぶ"
                 ]
             }
@@ -214,12 +223,12 @@ viewAnker path label =
 --         )
 
 
-cardLayouts : List Category -> Element msg
-cardLayouts categories =
+cardLayouts : Model -> Element Msg
+cardLayouts model =
     E.column [ E.width <| E.px 560, E.height <| E.fill, E.centerX, E.centerY, E.explain Debug.todo ]
         [ cardHeader
-        , cardCarousel categories
-        , cardPreview
+        , cardCarousel model.categories
+        , cardPreview model.message
         ]
 
 
@@ -275,7 +284,6 @@ cardCarousel categories =
             , E.row
                 [ E.width E.fill
                 , E.height <| E.fill
-                , E.explain Debug.todo
                 ]
               <|
                 List.repeat 5 <|
@@ -294,7 +302,6 @@ cardCarousel categories =
         -- デザインパネル
         , E.row
             [ E.height <| E.fillPortion 3
-            , E.explain Debug.todo
             ]
           <|
             List.repeat 5 <|
@@ -310,17 +317,29 @@ cardCarousel categories =
         ]
 
 
-cardPreview : Element msg
-cardPreview =
+cardPreview : String -> Element Msg
+cardPreview message =
     E.row
         [ E.width E.fill
-        , E.height <| E.fillPortion 30
-        , E.centerY
-        , E.centerX
-        , E.spacing 30
+        , E.height <| E.fillPortion 60
+        , E.explain Debug.todo
         ]
-        [ E.el [ E.padding 30 ]
-            (E.text "カード")
+        -- 台紙
+        [ E.column [ E.width E.fill, E.height <| E.fill ]
+            -- 選択したデザイン
+            [ E.image [ E.width E.fill, E.height <| E.px 280, E.padding 16 ] { description = "selectedDesign", src = "https://e-gifts-dev.s3-ap-northeast-1.amazonaws.com/eg_gift_card_designs/images/1/sp_select/coffee_aroma.jpg" }
+
+            -- メッセージ入力
+            , Input.multiline []
+                { label = Input.labelHidden "message"
+                , onChange = ChangeMessage
+                , placeholder = Just <| Input.placeholder [] <| E.text "メッセージを入れることが出来ます"
+                , spellcheck = True
+                , text = message
+                }
+            , E.text
+                message
+            ]
         ]
 
 
