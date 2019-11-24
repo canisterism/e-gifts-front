@@ -225,10 +225,11 @@ viewAnker path label =
 
 cardLayouts : Model -> Element Msg
 cardLayouts model =
-    E.column [ E.width <| E.px 560, E.height <| E.fill, E.centerX, E.centerY, E.explain Debug.todo ]
+    E.column [ E.width <| E.px 560, E.height <| E.fill, E.centerX, E.centerY ]
         [ cardHeader
         , cardCarousel model.categories
         , cardPreview model.message
+        , cardSubmit
         ]
 
 
@@ -239,7 +240,7 @@ cardHeader =
         , E.width E.fill
         , E.height <| E.fillPortion 1
         , E.spacing 30
-        , E.paddingXY 16 8
+        , E.padding 16
         ]
         [ E.el
             []
@@ -248,7 +249,8 @@ cardHeader =
                 , E.height <| E.px 16
                 , E.rotate <| degrees 45
                 ]
-                { url = "/", label = E.text "" }
+                { url = "/", label = E.text "」" }
+             -- テキストは仮置 borderにする
             )
         , E.el
             [ E.centerX
@@ -272,6 +274,7 @@ cardCarousel categories =
     E.column
         [ E.width E.fill
         , E.height <| E.fillPortion 6
+        , E.paddingXY 16 8
         ]
         -- カテゴリ行
         [ E.row [ E.width E.fill, E.height <| E.fillPortion 2 ]
@@ -322,25 +325,34 @@ cardPreview message =
     E.row
         [ E.width E.fill
         , E.height <| E.fillPortion 60
-        , E.explain Debug.todo
         ]
         -- 台紙
-        [ E.column [ E.width E.fill, E.height <| E.fill ]
+        [ E.column [ E.width E.fill, E.height <| E.fill, E.spacing 20, E.padding 20 ]
             -- 選択したデザイン
-            [ E.image [ E.width E.fill, E.height <| E.px 280, E.padding 16 ] { description = "selectedDesign", src = "https://e-gifts-dev.s3-ap-northeast-1.amazonaws.com/eg_gift_card_designs/images/1/sp_select/coffee_aroma.jpg" }
+            [ E.image [ E.width E.fill, E.height <| E.px 280 ] { description = "selectedDesign", src = "https://e-gifts-dev.s3-ap-northeast-1.amazonaws.com/eg_gift_card_designs/images/1/sp_select/coffee_aroma.jpg" }
 
             -- メッセージ入力
-            , Input.multiline []
+            , Input.multiline [ E.padding 20, E.height <| E.px 184 ]
                 { label = Input.labelHidden "message"
                 , onChange = ChangeMessage
                 , placeholder = Just <| Input.placeholder [] <| E.text "メッセージを入れることが出来ます"
                 , spellcheck = True
                 , text = message
                 }
-            , E.text
-                message
             ]
         ]
+
+
+cardSubmit : Element Msg
+cardSubmit =
+    E.link
+        [ E.width E.fill
+        , Font.center
+        , E.padding 16
+        , Background.color <| E.rgb255 94 181 31
+        , Font.color <| E.rgb255 255 255 255
+        ]
+        { url = "/payment", label = E.text "商品を選ぶ" }
 
 
 edges =
