@@ -42,6 +42,7 @@ type alias Model =
     , url : Url.Url
     , categories : List Category
     , message : String
+    , payment : Payment
     , device : E.Device
     }
 
@@ -58,6 +59,22 @@ type alias Design =
     , name : String
     , imageUrl : String
     , categoryId : Int
+    }
+
+
+type Payment
+    = Credit CreditSecrets
+    | Line
+    | Career
+    | SBCard
+    | UnSelected
+
+
+type alias CreditSecrets =
+    { number : String
+    , expiredMonth : String
+    , expiredYear : String
+    , cvc : String
     }
 
 
@@ -79,6 +96,14 @@ init :
     -> ( Model, Cmd Msg )
 init flags url key =
     let
+        payment =
+            Credit
+                { number = ""
+                , expiredMonth = ""
+                , expiredYear = ""
+                , cvc = ""
+                }
+
         device =
             E.classifyDevice
                 { height = flags.window.height
@@ -94,6 +119,7 @@ init flags url key =
           }
         ]
         "String"
+        payment
         device
     , Cmd.none
     )
@@ -109,6 +135,7 @@ type Msg
     | UrlChanged Url.Url
     | GotCategories (Result Http.Error (List Category))
     | ChangeMessage String
+    | ChangeCreditNumber String
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -166,6 +193,18 @@ update msg model =
 
         ChangeMessage message ->
             ( { model | message = message }, Cmd.none )
+
+        ChangeCreditNumber number ->
+            case model.payment of
+                Credit oldSecrets ->
+                    let
+                        newSecrets =
+                            { oldSecrets | number = number }
+                    in
+                    ( { model | payment = Credit newSecrets }, Cmd.none )
+
+                _ ->
+                    ( model, Cmd.none )
 
         GotCategories result ->
             case result of
@@ -235,7 +274,8 @@ view model =
         Payment ->
             { title = "Payment"
             , body =
-                [ h1 [] [ text "決済画面" ]
+                [ E.layout [] (paymentInfo model)
+                , viewAnker "http://localhost:3001" "GMO3Dセキュアする"
                 , viewAnker "/complete" "決済"
                 ]
             }
@@ -448,6 +488,30 @@ cardSubmit =
         , class "submit__button"
         ]
         { url = "/payment", label = E.text "商品を選ぶ" }
+
+
+paymentInfo : Model -> Element Msg
+paymentInfo model =
+    let
+        number =
+            getCreditNumber model
+    in
+    Input.text [ class "credit__number" ]
+        { label = Input.labelLeft [] <| E.text "Number"
+        , onChange = ChangeCreditNumber
+        , placeholder = Just <| Input.placeholder [] <| E.text "1234 5678 9999 9999"
+        , text = number
+        }
+
+
+getCreditNumber : Model -> String
+getCreditNumber model =
+    case model.payment of
+        Credit secrets ->
+            secrets.number
+
+        _ ->
+            ""
 
 
 edges =
