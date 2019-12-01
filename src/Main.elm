@@ -27,7 +27,7 @@ main =
         { init = init
         , view = view
         , update = update
-        , subscriptions = \_ -> Sub.none
+        , subscriptions = subscriptions
         , onUrlChange = UrlChanged
         , onUrlRequest = LinkClicked
         }
@@ -62,8 +62,13 @@ type alias Design =
 
 
 type alias Flags =
-    { innerWidth : Int
-    , innerHeight : Int
+    { window : Window
+    }
+
+
+type alias Window =
+    { width : Int
+    , height : Int
     }
 
 
@@ -76,8 +81,8 @@ init flags url key =
     let
         device =
             E.classifyDevice
-                { height = flags.innerHeight
-                , width = flags.innerWidth
+                { height = flags.window.height
+                , width = flags.window.width
                 }
     in
     ( Model
@@ -99,7 +104,8 @@ init flags url key =
 
 
 type Msg
-    = LinkClicked Browser.UrlRequest
+    = GotNewWindowSize Window
+    | LinkClicked Browser.UrlRequest
     | UrlChanged Url.Url
     | GotCategories (Result Http.Error (List Category))
     | ChangeMessage String
@@ -108,6 +114,18 @@ type Msg
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
+        GotNewWindowSize window ->
+            let
+                device =
+                    E.classifyDevice
+                        { height = window.height
+                        , width = window.width
+                        }
+            in
+            ( { model | device = device }
+            , Cmd.none
+            )
+
         -- こっちが先に発生する
         LinkClicked urlRequest ->
             case urlRequest of
@@ -184,6 +202,15 @@ urlToRoute url =
 
 
 
+-- SUBSCRIPTION
+
+
+subscriptions : Model -> Sub Msg
+subscriptions _ =
+    Browser.Events.onResize (\w h -> GotNewWindowSize { height = h, width = w })
+
+
+
 --VIEW
 
 
@@ -245,7 +272,16 @@ viewAnker path label =
 
 cardLayouts : Model -> Element Msg
 cardLayouts model =
-    E.column [ E.width <| E.px 560, E.height <| E.fill, E.centerX, E.centerY ]
+    let
+        wrapperWidth =
+            case model.device.class of
+                E.Phone ->
+                    E.fill
+
+                _ ->
+                    E.px 560
+    in
+    E.column [ E.width <| wrapperWidth, E.height <| E.fill, E.centerX, E.centerY ]
         [ cardHeader
         , cardCarousel model.categories
         , cardPreview model.message
@@ -391,7 +427,7 @@ cardPreview : String -> Element Msg
 cardPreview message =
     E.row
         [ E.width E.fill
-        , E.height <| E.fillPortion 60
+        , E.height <| E.fillPortion 1
         ]
         -- 台紙
         [ E.column [ E.width E.fill, E.height <| E.fill, E.spacing 20, E.padding 20, class "preview__base" ]
