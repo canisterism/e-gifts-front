@@ -1,6 +1,7 @@
 module Main exposing (..)
 
 import Browser
+import Browser.Events
 import Browser.Navigation as Nav
 import Element as E exposing (Element)
 import Element.Background as Background
@@ -20,7 +21,7 @@ import Url.Parser as P exposing (Parser)
 -- MAIN
 
 
-main : Program () Model Msg
+main : Program Flags Model Msg
 main =
     Browser.application
         { init = init
@@ -41,6 +42,7 @@ type alias Model =
     , url : Url.Url
     , categories : List Category
     , message : String
+    , device : E.Device
     }
 
 
@@ -59,8 +61,25 @@ type alias Design =
     }
 
 
-init : () -> Url.Url -> Nav.Key -> ( Model, Cmd Msg )
+type alias Flags =
+    { innerWidth : Int
+    , innerHeight : Int
+    }
+
+
+init :
+    Flags
+    -> Url.Url
+    -> Nav.Key
+    -> ( Model, Cmd Msg )
 init flags url key =
+    let
+        device =
+            E.classifyDevice
+                { height = flags.innerHeight
+                , width = flags.innerWidth
+                }
+    in
     ( Model
         key
         url
@@ -70,6 +89,7 @@ init flags url key =
           }
         ]
         "String"
+        device
     , Cmd.none
     )
 
