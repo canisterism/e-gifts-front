@@ -261,15 +261,6 @@ viewAnker path label =
     a [ href path ] [ h2 [] [ text label ] ]
 
 
-
--- showCategory : Category -> Element msg
--- showCategory category =
---     el []
---         ( h3 [] [ text category.name ]
---         , img [ src category.imageUrl ] []
---         )
-
-
 cardLayouts : Model -> Element Msg
 cardLayouts model =
     let
